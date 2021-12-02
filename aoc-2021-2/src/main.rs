@@ -27,6 +27,7 @@ impl FromStr for Command {
 struct State {
     depth: u32,
     horizontal_position: u32,
+    aim: u32,
 }
 
 impl State {
@@ -34,14 +35,28 @@ impl State {
         State {
             depth: 0,
             horizontal_position: 0,
+            aim: 0,
         }
     }
-    fn run(&mut self, commands: &[Command]) {
+    fn run_part_1(&mut self, commands: &[Command]) {
         for command in commands {
             match command {
                 Command::Forward(arg) => self.horizontal_position += arg,
                 Command::Down(arg) => self.depth += arg,
                 Command::Up(arg) => self.depth -= arg,
+            }
+        }
+    }
+
+    fn run_part_2(&mut self, commands: &[Command]) {
+        for command in commands {
+            match command {
+                Command::Forward(arg) => {
+                    self.horizontal_position += arg;
+                    self.depth += self.aim * arg;
+                }
+                Command::Down(arg) => self.aim += arg,
+                Command::Up(arg) => self.aim -= arg,
             }
         }
     }
@@ -60,10 +75,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let input = parse(&contents);
     let mut state = State::new();
-    state.run(&input);
+    state.run_part_1(&input);
 
     let solution_1 = state.depth * state.horizontal_position;
     println!("Part 1: {}", solution_1);
+
+    state = State::new();
+    state.run_part_2(&input);
+
+    let solution_2 = state.depth * state.horizontal_position;
+    println!("Part 2: {}", solution_2);
     
 
     Ok(())
