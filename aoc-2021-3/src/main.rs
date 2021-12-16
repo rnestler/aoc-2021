@@ -1,11 +1,9 @@
 use std::fs::File;
 use std::io::prelude::*;
 
-fn part_1(input: &str) -> u32 {
-    let mut line_count = 0;
+fn count_ones(input: &str) -> Vec<u32> {
     let mut ones = vec![];
     for line in input.lines() {
-        line_count += 1;
         for (index, byte) in line.bytes().enumerate() {
             let bit: bool = match byte {
                 b'0' => false,
@@ -20,19 +18,34 @@ fn part_1(input: &str) -> u32 {
             }
         }
     }
+    ones
+}
+
+fn part_1(input: &str) -> (u32, u32) {
+    let mut line_count = input.lines().count();
+    let mut ones = count_ones(input);
     let mut epsilon = 0;
     let mut gamma = 0;
     for n in ones {
         epsilon <<= 1;
         gamma <<= 1;
-        if n > line_count / 2 {
+        if n as usize > line_count / 2 {
             epsilon += 1;
         } else {
             gamma += 1;
         }
     }
 
-    epsilon * gamma
+    (epsilon, gamma)
+}
+
+fn part_2(input: &str, epsilon: u32, gamma: u32) -> u32 {
+    for line in input.lines() {
+        for (index, byte) in line.bytes().enumerate() {
+        }
+    }
+    let mut 
+    0
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -40,8 +53,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
-    let solution_1 = part_1(&contents);
-    println!("Part 1: {}", solution_1);
+    let (epsilon, gamma) = part_1(&contents);
+    println!("Part 1: {}", epsilon * gamma);
 
     Ok(())
 }
@@ -65,7 +78,7 @@ mod tests {
                      11001\n\
                      00010\n\
                      01010\n";
-        let result_1 = part_1(input);
-        assert_eq!(result_1, 198);
+        let (epsilon, gamma) = part_1(input);
+        assert_eq!(epsilon * gamma, 198);
     }
 }
